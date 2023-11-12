@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { Box } from '@mui/material';
+import Home from 'pages/home';
+import { Provider } from 'react-redux';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+import store from 'redux/store';
+import './index.css';
+
+dayjs.extend(relativeTime);
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+  },
+  {
+    path: '/home',
+    element: <div>essss</div>,
+  },
+]);
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <Box px={24}>
+        <RouterProvider router={router} />
+      </Box>
+    </Provider>
   );
 }
 

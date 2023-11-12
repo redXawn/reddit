@@ -1,18 +1,20 @@
-import { Box, Button, Grid, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Menu, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { useLoading } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setForumList } from 'redux/reducers/forum';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { LocalFireDepartment, Star, BarChart } from '@mui/icons-material';
+
+import { setForumList, setCardVariant, setSortForum } from 'redux/reducers/forum';
 import { capitalizeFirstLetter } from 'utils/text';
 import ThreadCard from './components/ThreadCard';
 
 const Home = () => {
   const dispatch = useDispatch();
   const { setLoading } = useLoading();
-  const { forum, before, after } = useSelector((state) => state.forum);
+  const { forum, after, cardVariant, sort } = useSelector((state) => state.forum);
 
-  const [variantCard, setVariantCard] = useState('card');
   const [anchorElMenu, setAnchorElMenu] = useState(null);
   const open = Boolean(anchorElMenu);
 
@@ -21,7 +23,7 @@ const Home = () => {
   };
 
   const handleSetVariant = (variant) => {
-    setVariantCard(variant);
+    dispatch(setCardVariant(variant));
     handleCloseMenu();
   };
 
@@ -32,7 +34,7 @@ const Home = () => {
   const getList = useCallback(
     async (after) => {
       setLoading(true);
-      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}`, {
+      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/${sort}.json`, {
         params: {
           after,
         },
@@ -40,20 +42,43 @@ const Home = () => {
       dispatch(setForumList(data.data));
       setLoading(false);
     },
-    [setLoading, dispatch]
+    [setLoading, dispatch, sort]
   );
 
   useEffect(() => {
     getList();
   }, [getList]);
 
+  const checkActiveSort = useCallback(
+    (value) => {
+      return sort === value ? 'contained' : 'text';
+    },
+    [sort]
+  );
+
   return (
     <>
-      <Box display="flex" justifyContent="space-between">
-        <Box>Hot</Box>
+      <Box display="flex" justifyContent="space-between" my={2}>
+        <Box display="flex" gap={1}>
+          <Button
+            variant={checkActiveSort('hot')}
+            onClick={() => dispatch(setSortForum('hot'))}
+            startIcon={<LocalFireDepartment />}>
+            Hot
+          </Button>
+          <Button variant={checkActiveSort('new')} onClick={() => dispatch(setSortForum('new'))} startIcon={<Star />}>
+            New
+          </Button>
+          <Button
+            variant={checkActiveSort('top')}
+            onClick={() => dispatch(setSortForum('top'))}
+            startIcon={<BarChart />}>
+            Top
+          </Button>
+        </Box>
         <Box>
           <Button sx={{ textTransform: 'unset' }} onClick={handleClickMenu}>
-            {capitalizeFirstLetter(variantCard)}
+            {capitalizeFirstLetter(cardVariant)}
           </Button>
           <Menu anchorEl={anchorElMenu} open={open} onClose={handleCloseMenu}>
             <MenuItem onClick={() => handleSetVariant('card')}>Card</MenuItem>
@@ -63,9 +88,11 @@ const Home = () => {
         </Box>
       </Box>
       <Box>
-        {forum.map((item, index) => {
-          return <ThreadCard key={index} data={item.data} variant={variantCard} />;
-        })}
+        <InfiniteScroll dataLength={forum.length} next={() => getList(after)} hasMore={!!after}>
+          {forum.map((item, index) => {
+            return <ThreadCard key={index} index={index} data={item.data} variant={cardVariant} />;
+          })}
+        </InfiniteScroll>
       </Box>
     </>
   );

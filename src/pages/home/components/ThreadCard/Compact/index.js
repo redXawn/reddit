@@ -11,7 +11,7 @@ const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, d
       <Box width="100%">
         <Box display="flex" justifyContent="space-between">
           <Box display="flex" alignItems="start">
-            <Box display="flex" alignItems="start">
+            <Box display="flex" alignItems="start" textAlign="center">
               <CompactVoteWrapper>
                 <VoteButton onClick={upVote}>
                   <ArrowUpward
@@ -22,7 +22,9 @@ const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, d
                     }}
                   />
                 </VoteButton>
-                <Typography variant="caption">{formatCountNumber(data.ups)}</Typography>
+                <Typography width="25px" variant="caption">
+                  {formatCountNumber(data.ups)}
+                </Typography>
                 <VoteButton onClick={downVote}>
                   <ArrowDownward
                     sx={{

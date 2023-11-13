@@ -8,6 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 import store from 'redux/store';
 import './index.css';
+import { Helmet } from 'react-helmet';
 
 dayjs.extend(relativeTime);
 
@@ -25,6 +26,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <Provider store={store}>
+      <Helmet>
+        <title>Reddit</title>
+      </Helmet>
       <Box px={24}>
         <RouterProvider router={router} />
       </Box>

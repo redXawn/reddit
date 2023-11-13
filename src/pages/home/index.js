@@ -9,6 +9,7 @@ import { LocalFireDepartment, Star, BarChart } from '@mui/icons-material';
 import { setForumList, setCardVariant, setSortForum } from 'redux/reducers/forum';
 import { capitalizeFirstLetter } from 'utils/text';
 import ThreadCard from './components/ThreadCard';
+import { Helmet } from 'react-helmet';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -60,6 +61,9 @@ const Home = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Reddit - Home</title>
+      </Helmet>
       <Box display="flex" justifyContent="space-between" my={2}>
         <Box display="flex" gap={1}>
           <Button

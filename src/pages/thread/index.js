@@ -8,6 +8,7 @@ import { setThread } from 'redux/reducers/thread';
 
 import MainCard from './components/MainCard';
 import CommentCard from './components/CommentCard';
+import { Helmet } from 'react-helmet';
 
 const ThreadPage = () => {
   const { setLoading } = useLoading();
@@ -40,33 +41,38 @@ const ThreadPage = () => {
     return <div>loading...</div>;
   }
   return (
-    <Box maxWidth="640px" m="auto" mt={2}>
-      <MainCard
-        data={main.data}
-        cardContent={() => {}}
-        upVote={() => {}}
-        downVote={() => {}}
-        redirectThread={() => {}}
-      />
-      <Box>
-        <TextField
-          fullWidth
-          multiline
-          rows={4}
-          placeholder="What are your thoughts?"
-          value={inputComment}
-          onChange={(e) => setInputComment(e.target.value)}
+    <>
+      <Helmet>
+        <title>Reddit - Thread</title>
+      </Helmet>
+      <Box maxWidth="640px" m="auto" mt={2}>
+        <MainCard
+          data={main.data}
+          cardContent={() => {}}
+          upVote={() => {}}
+          downVote={() => {}}
+          redirectThread={() => {}}
         />
-        <Box mt={2} textAlign="right">
-          <Button variant="contained" disabled={!inputComment}>
-            Comment
-          </Button>
+        <Box>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            placeholder="What are your thoughts?"
+            value={inputComment}
+            onChange={(e) => setInputComment(e.target.value)}
+          />
+          <Box mt={2} textAlign="right">
+            <Button variant="contained" disabled={!inputComment}>
+              Comment
+            </Button>
+          </Box>
         </Box>
+        {comment.data.children.map((item, index) => (
+          <CommentCard key={index} data={item.data} />
+        ))}
       </Box>
-      {comment.data.children.map((item, index) => (
-        <CommentCard key={index} data={item.data} />
-      ))}
-    </Box>
+    </>
   );
 };
 

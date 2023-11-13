@@ -6,9 +6,12 @@ import { setVote } from 'redux/reducers/forum';
 import Card from './Card';
 import Classic from './Classic';
 import Compact from './Compact';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import { resetThread } from 'redux/reducers/thread';
 
 const ThreadCard = ({ data, variant }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [expandPost, setExpandPost] = useState(false);
 
@@ -57,8 +60,20 @@ const ThreadCard = ({ data, variant }) => {
       type: value,
       id: data.id,
     };
-    console.log(payload);
     dispatch(setVote(payload));
+  };
+
+  const handleRedirectThread = () => {
+    dispatch(resetThread());
+
+    const params = {
+      id: data.id,
+      title: data.permalink.split(`${data.id}/`)[1],
+    };
+    navigate({
+      pathname: '/thread',
+      search: createSearchParams(params).toString(),
+    });
   };
 
   if (variant === 'card') {
@@ -68,6 +83,7 @@ const ThreadCard = ({ data, variant }) => {
         cardContent={renderContent()}
         upVote={() => setVoteThread('up')}
         downVote={() => setVoteThread('down')}
+        redirectThread={handleRedirectThread}
       />
     );
   } else if (variant === 'classic') {
@@ -79,6 +95,7 @@ const ThreadCard = ({ data, variant }) => {
         expandPost={expandPost}
         setVote={() => setVoteThread('up')}
         downVote={() => setVoteThread('down')}
+        redirectThread={handleRedirectThread}
       />
     );
   } else {
@@ -90,6 +107,7 @@ const ThreadCard = ({ data, variant }) => {
         expandPost={expandPost}
         upVote={() => setVoteThread('up')}
         downVote={() => setVoteThread('down')}
+        redirectThread={handleRedirectThread}
       />
     );
   }

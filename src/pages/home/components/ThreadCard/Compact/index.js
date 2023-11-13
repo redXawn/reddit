@@ -1,14 +1,11 @@
-import { useNavigate } from 'react-router-dom';
-import { Box, Chip, IconButton, Typography } from '@mui/material';
+import { Box, Chip, Typography } from '@mui/material';
 import { ArrowUpward, ArrowDownward, ChatBubbleOutline, MoreHoriz, OpenInFullOutlined } from '@mui/icons-material';
 import dayjs from 'dayjs';
 
 import { CardWrapper, CompactVoteWrapper, FooterIconWrapper, VoteButton } from '../styles';
 import { formatCountNumber } from 'utils/text';
 
-const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, downVote }) => {
-  const navigate = useNavigate();
-
+const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, downVote, redirectThread }) => {
   return (
     <CardWrapper variant={'compact'}>
       <Box width="100%">
@@ -16,7 +13,7 @@ const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, d
           <Box display="flex" alignItems="start">
             <Box display="flex" alignItems="start">
               <CompactVoteWrapper>
-                <VoteButton disabled={data.likes} onClick={upVote}>
+                <VoteButton onClick={upVote}>
                   <ArrowUpward
                     sx={{
                       ...(data.likes && {
@@ -26,7 +23,7 @@ const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, d
                   />
                 </VoteButton>
                 <Typography variant="caption">{formatCountNumber(data.ups)}</Typography>
-                <VoteButton disabled={data.hates} onClick={downVote}>
+                <VoteButton onClick={downVote}>
                   <ArrowDownward
                     sx={{
                       ...(data.hates && {
@@ -41,7 +38,7 @@ const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, d
               </FooterIconWrapper>
             </Box>
             <Box
-              onClick={() => navigate('/thread')}
+              onClick={redirectThread}
               width="100%"
               sx={{
                 padding: '3px 0',
@@ -63,7 +60,7 @@ const ThreadCompact = ({ data, cardContent, setExpandPost, expandPost, upVote, d
             </Box>
           </Box>
           <Box display="flex" alignItems="center">
-            <FooterIconWrapper>
+            <FooterIconWrapper onClick={redirectThread}>
               <ChatBubbleOutline sx={{ width: '16px', marginRight: 1 }} />
               <Typography variant="caption" fontWeight="bold">
                 {formatCountNumber(data.num_comments)}

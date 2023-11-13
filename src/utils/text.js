@@ -4,6 +4,7 @@ export const capitalizeFirstLetter = (string) => {
 };
 
 export const formatCountNumber = (value) => {
+  if (!value) return 0;
   if (value >= 1000) {
     const formattedNumber = (value / 1000).toFixed(1);
     return `${formattedNumber}k`;

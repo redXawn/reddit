@@ -66,24 +66,41 @@ const forum = (state = initialState, action) => {
     case Types.SET_VOTE:
       const newForumData = state.forum.map((item) => {
         if (item.data.id === action.payload.id) {
-          console.log(item.data);
           if (action.payload.type === 'up') {
+            const handleUpsVote = () => {
+              if (item.data.hates) {
+                return item.data.ups + 2;
+              } else if (item.data.likes) {
+                return item.data.ups - 1;
+              } else {
+                return item.data.ups + 1;
+              }
+            };
             return {
               ...item,
               data: {
                 ...item.data,
-                ups: item.data.hates ? item.data.ups + 2 : item.data.ups + 1,
-                likes: true,
+                ups: handleUpsVote(),
+                likes: item.data.likes ? false : true,
                 hates: false,
               },
             };
           } else {
+            const handleDownsVote = () => {
+              if (item.data.likes) {
+                return item.data.ups - 2;
+              } else if (item.data.hates) {
+                return item.data.ups + 1;
+              } else {
+                return item.data.ups - 1;
+              }
+            };
             return {
               ...item,
               data: {
                 ...item.data,
-                ups: item.data.likes ? item.data.ups - 2 : item.data.ups - 1,
-                hates: true,
+                ups: handleDownsVote(),
+                hates: item.data.hates ? false : true,
                 likes: false,
               },
             };
@@ -93,7 +110,6 @@ const forum = (state = initialState, action) => {
         return item;
       });
 
-      console.log('new data', newForumData);
       return {
         ...state,
         forum: newForumData,

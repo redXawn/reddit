@@ -46,8 +46,10 @@ const Home = () => {
   );
 
   useEffect(() => {
-    getList();
-  }, [getList]);
+    if (forum.length === 0) {
+      getList();
+    }
+  }, [getList, forum]);
 
   const checkActiveSort = useCallback(
     (value) => {

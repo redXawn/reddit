@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import Home from 'pages/home';
+import Thread from 'pages/thread';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -16,8 +17,8 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: '/home',
-    element: <div>essss</div>,
+    path: '/thread',
+    element: <Thread />,
   },
 ]);
 
